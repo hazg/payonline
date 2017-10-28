@@ -24,14 +24,14 @@ module Payonline
 
     # Prepend params hash with merchant_id
     def prepare_params(params, add_merchant_id = true, add_request_body = false)
-      if add_request_body
-        params.reverse_merge!(request_body: params[:request_body])
-        @keys.unshift(:request_body)
-      end
-
       if add_merchant_id
         params.reverse_merge!(merchant_id: Payonline.configuration.merchant_id)
         @keys.unshift(:merchant_id)
+      end
+
+      if add_request_body
+        params.reverse_merge!(request_body: params[:request_body])
+        @keys.unshift(:request_body)
       end
 
       params.with_indifferent_access

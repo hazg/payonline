@@ -1,7 +1,7 @@
 module Payonline
   class FiscalGateway
     BASE_URL = 'https://secure.payonlinesystem.com/Services/Fiscal/Request.ashx'
-    SIGNED_PARAMS = %w(request_body)
+    SIGNED_PARAMS = %w(request_body merchant_id)
 
     def initialize(params = {})
       @params = prepare_params(params)
@@ -17,7 +17,7 @@ module Payonline
 
     # Return the URL without performing a request
     def fiscal_url
-      security_key = Payonline::Signature.new(@params, SIGNED_PARAMS).digest
+      security_key = Payonline::Signature.new(@params, SIGNED_PARAMS, _, true).digest
 
       "#{BASE_URL}/?#{fiscal_url_params.to_query}"
     end
@@ -30,9 +30,9 @@ module Payonline
     end
 
     def prepare_params(params)
-      params
-        .with_indifferent_access
-        .deep_merge({ request_body: { totalAmount: format('%.2f', params[:request_body][:totalAmount]) } })
+      params = params.with_indifferent_access
+      params[:request_body][:totalAmount] = format('%.2f', params[:request_body][:totalAmount])
+      params.merge!(request_body: params[:request_body].to_json)
     end
   end
 end

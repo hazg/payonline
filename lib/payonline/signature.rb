@@ -1,10 +1,10 @@
 module Payonline
   class Signature
-    def initialize(params, keys, add_merchant_id = true)
+    def initialize(params, keys, add_merchant_id = true, add_request_body = false)
       @keys = keys
 
       # The order of parameter keys matters
-      @params = prepare_params(params, add_merchant_id)
+      @params = prepare_params(params, add_merchant_id, add_request_body)
 
       # Permitted content_type values: text, xml
       @params[:security_key] = digest
@@ -23,7 +23,12 @@ module Payonline
     private
 
     # Prepend params hash with merchant_id
-    def prepare_params(params, add_merchant_id = true)
+    def prepare_params(params, add_merchant_id = true, add_request_body = false)
+      if add_request_body
+        params.reverse_merge!(request_body: params[:request_body])
+        @keys.unshift(:request_body)
+      end
+
       if add_merchant_id
         params.reverse_merge!(merchant_id: Payonline.configuration.merchant_id)
         @keys.unshift(:merchant_id)

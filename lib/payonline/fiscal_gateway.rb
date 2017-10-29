@@ -9,7 +9,10 @@ module Payonline
 
     # Perform the fiscal operation and return the response
     def fiscalization
-      response = HTTParty.post(fiscal_url)
+      response = HTTParty.post(fiscal_url, {
+                   body: @params[:request_body],
+                   headers: { 'Content-Type' => 'application/json' }
+                 })
       return false unless response.success?
 
       Payonline::FiscalResponse.new(response.body).success?
@@ -25,7 +28,7 @@ module Payonline
     private
 
     def fiscal_url_params
-      params = { security_key: security_key, merchant_id: Payonline.configuration.merchant_id }
+      params = { merchant_id: Payonline.configuration.merchant_id, security_key: security_key }
       params.transform_keys { |key| key.to_s.camelize }
     end
 

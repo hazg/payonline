@@ -6,6 +6,8 @@ require 'payonline/payment_gateway'
 require 'payonline/payment_response'
 require 'payonline/rebill_gateway'
 require 'payonline/rebill_response'
+require 'payonline/fiscal_gateway'
+require 'payonline/fiscal_response'
 require 'payonline/signature'
 
 module Payonline

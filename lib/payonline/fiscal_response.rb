@@ -17,7 +17,7 @@ module Payonline
     private
 
     def parse_response(response)
-      JSON.parse(response).with_indifferent_access
+      response.parsed_response.with_indifferent_access
     end
   end
 end

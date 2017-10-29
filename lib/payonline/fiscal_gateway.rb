@@ -20,14 +20,13 @@ module Payonline
 
     # Return the URL without performing a request
     def fiscal_url
-      security_key = Payonline::Signature.new(@params, SIGNED_PARAMS, _, true).digest
-
       "#{BASE_URL}/?#{fiscal_url_params.to_query}"
     end
 
     private
 
     def fiscal_url_params
+      security_key = Payonline::Signature.new(@params, SIGNED_PARAMS, _, true).digest
       params = { merchant_id: Payonline.configuration.merchant_id, security_key: security_key }
       params.transform_keys { |key| key.to_s.camelize }
     end

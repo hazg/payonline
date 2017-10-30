@@ -26,7 +26,7 @@ module Payonline
     private
 
     def fiscal_url_params
-      security_key = Payonline::Signature.new(@params, SIGNED_PARAMS, _, true).digest
+      security_key = Payonline::Signature.new(@params, SIGNED_PARAMS, true, true).digest
       params = { merchant_id: Payonline.configuration.merchant_id, security_key: security_key }
       params.transform_keys { |key| key.to_s.camelize }
     end

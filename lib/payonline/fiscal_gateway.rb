@@ -15,7 +15,7 @@ module Payonline
                  })
       return false unless response.success?
 
-      Payonline::FiscalResponse.new(response.body).success?
+      Payonline::FiscalResponse.new(response).success?
     end
 
     # Return the URL without performing a request

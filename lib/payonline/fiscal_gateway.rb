@@ -9,13 +9,21 @@ module Payonline
 
     # Perform the fiscal operation and return the response
     def fiscalization
-      response = HTTParty.post(fiscal_url, {
+      @response = HTTParty.post(fiscal_url, {
                    body: @params[:request_body],
                    headers: { 'Content-Type' => 'application/json' }
                  })
-      return false unless response.success?
+      return false unless @response.success?
 
-      Payonline::FiscalResponse.new(response).success?
+      Payonline::FiscalResponse.new(@response).success?
+    end
+    
+    def response_text
+      @response.parsed_response['status']['text']
+    end
+
+    def response_code
+      @response.parsed_response['status']['code']
     end
 
     # Return the URL without performing a request
@@ -33,7 +41,15 @@ module Payonline
 
     def prepare_params(params)
       params = params.with_indifferent_access
+      
       params[:request_body][:totalAmount] = format('%.2f', params[:request_body][:totalAmount])
+      params[:request_body][:goods].each_with_index{|v, i|
+      
+        v['amount'] = format('%.2f', v['amount'])
+        v['description'] = v['description'][0..128]
+        params[:request_body][:goods][i] = v
+        
+      }
       params.merge!(request_body: params[:request_body].to_json)
     end
   end

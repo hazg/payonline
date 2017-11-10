@@ -51,7 +51,7 @@ module Payonline
         
       }
 
-      Rails.logger.info 'REQUEST_BODY:' + params[:request_body]
+      Rails.logger.info 'REQUEST_BODY:' + params[:request_body].to_json.to_s
       params.merge!(request_body: params[:request_body].to_json)
     end
   end

@@ -50,6 +50,8 @@ module Payonline
         params[:request_body][:goods][i] = v
         
       }
+
+      Rails.logger.info 'REQUEST_BODY:' + params[:request_body]
       params.merge!(request_body: params[:request_body].to_json)
     end
   end

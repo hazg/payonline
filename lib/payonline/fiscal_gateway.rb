@@ -49,7 +49,7 @@ module Payonline
         v['description'] = v['description'][0..128]
         params[:request_body][:goods][i] = v
 
-      } if params[:request_body].includes?(:goods)
+      } if params[:request_body].include?(:goods)
 
       Rails.logger.info 'REQUEST_BODY:' + params[:request_body].to_json.to_s
       params.merge!(request_body: params[:request_body].to_json)

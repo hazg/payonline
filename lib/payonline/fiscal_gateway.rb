@@ -41,15 +41,15 @@ module Payonline
 
     def prepare_params(params)
       params = params.with_indifferent_access
-      
+
       params[:request_body][:totalAmount] = format('%.2f', params[:request_body][:totalAmount])
-      params[:request_body][:goods].each_with_index{|v, i|
-      
+      params[:request_body][:goods].each_with_index{ |v, i|
+
         v['amount'] = format('%.2f', v['amount'])
         v['description'] = v['description'][0..128]
         params[:request_body][:goods][i] = v
-        
-      }
+
+      } if params[:request_body].includes?(:goods)
 
       Rails.logger.info 'REQUEST_BODY:' + params[:request_body].to_json.to_s
       params.merge!(request_body: params[:request_body].to_json)

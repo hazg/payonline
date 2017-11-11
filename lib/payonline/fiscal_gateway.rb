@@ -23,10 +23,6 @@ module Payonline
       "#{BASE_URL}/?#{fiscal_url_params.to_query}"
     end
 
-    def response
-      @response
-    end
-
     def response_text
       @response&.parsed_response['status']['text']
     end

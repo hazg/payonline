@@ -18,17 +18,21 @@ module Payonline
       Payonline::FiscalResponse.new(@response).success?
     end
     
-    def response_text
-      @response.parsed_response['status']['text']
-    end
-
-    def response_code
-      @response.parsed_response['status']['code']
-    end
-
     # Return the URL without performing a request
     def fiscal_url
       "#{BASE_URL}/?#{fiscal_url_params.to_query}"
+    end
+
+    def response
+      @response
+    end
+
+    def response_text
+      @response&.parsed_response['status']['text']
+    end
+
+    def response_code
+      @response&.parsed_response['status']['code']
     end
 
     private

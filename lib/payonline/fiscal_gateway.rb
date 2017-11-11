@@ -9,10 +9,21 @@ module Payonline
 
     # Perform the fiscal operation and return the response
     def fiscalization
+
       @response = HTTParty.post(fiscal_url, {
-                   body: @params[:request_body],
-                   headers: { 'Content-Type' => 'application/json' }
-                 })
+                    body: @params[:request_body],
+                    headers: { 'Content-Type' => 'application/json' }
+                  })
+
+
+      if @response.code != 200
+        Rails.logger.info "*** Payonline HTTP ERROR CODE: #{@response.code}"
+        return false;
+      end
+      
+      Rails.logger.info fiscal_url
+      Rails.logger.info '*Payonline RESPONSE:' + @response.inspect
+
       return false unless @response.success?
 
       Payonline::FiscalResponse.new(@response).success?
@@ -24,11 +35,11 @@ module Payonline
     end
 
     def response_text
-      @response&.parsed_response['status']['text']
+      @response.parsed_response['status']['text']
     end
 
     def response_code
-      @response&.parsed_response['status']['code']
+      @response.parsed_response['status']['code']
     end
 
     private
